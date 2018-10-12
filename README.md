@@ -19,3 +19,9 @@ To run (link: http://wiki.ros.org/pr2_simulator/Tutorials) :
 $ roslaunch gazebo_ros empty_world.launch
 $ roslaunch pr2_gazebo pr2.launch
 ```
+
+### Topics
+
+http://docs.ros.org/diamondback/api/geometry_msgs/html/msg/PoseWithCovarianceStamped.html
+
+this is `/robot_pose_ekf/odom_combined`
