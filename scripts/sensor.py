@@ -32,7 +32,7 @@ def callback(data):
     
 def listener():
     print "pls"
-    rospy.init_node('sensor_x', anonymous=True)    
+    rospy.init_node('sensor', anonymous=True)    
     rospy.Subscriber("base_pose_ground_truth", Odometry, callback)
     rospy.spin()
 
