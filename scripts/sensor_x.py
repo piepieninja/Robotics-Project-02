@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import rospy
+import random
 # imports
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from nav_msgs.msg import Odometry
@@ -11,11 +12,14 @@ def callback(data):
     x = data.pose.pose.position.x
     y = data.pose.pose.position.y
     z = data.pose.pose.position.z
-    # do something ...
-    # ...
-    # profit?
-    
-    
+    # do something
+    mu = 0.0
+    sigma = 1.0
+    x_range = x + random.gauss(mu, sigma)
+    # publish values to the guy
+    pub = rospy.Publisher('sensor_x_range', Float, queue_size=10)
+    pub.publish(x_range)
+
     
 def listener():
     print "pls"
