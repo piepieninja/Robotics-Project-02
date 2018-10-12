@@ -13,12 +13,15 @@ def callback(data):
     x = data.pose.pose.position.x
     y = data.pose.pose.position.y
     z = data.pose.pose.position.z
-    # do something
+    # add in the randomness
     mu = 0.0
     sigma = 1.0
     x_range = x + random.gauss(mu, sigma)
     y_range = y + random.gauss(mu, sigma)
-    print "x + gaussian: " + str(x_range) + ", y + gaussian: " + str(y_range) 
+    print "x + gaussian: " + str(x_range) + ", y + gaussian: " + str(y_range)     
+    # HERE DO THE ACTUAL RANGE FINDING
+    # modify x_range 
+    # modify y_range
     # publish values to the guy
     msg = Sensor_range
     msg.z1 = x_range
