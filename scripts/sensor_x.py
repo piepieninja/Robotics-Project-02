@@ -17,7 +17,7 @@ def callback(data):
     sigma = 1.0
     x_range = x + random.gauss(mu, sigma)
     # publish values to the guy
-    pub = rospy.Publisher('sensor_x_range', Float, queue_size=10)
+    pub = rospy.Publisher('sensor_x_range', Float64, queue_size=10)
     pub.publish(x_range)
 
     
