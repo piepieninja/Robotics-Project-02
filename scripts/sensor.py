@@ -5,7 +5,7 @@ import random
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String, Float64
-from Robotics-Project-2.msg import Sensor_range
+from Robotics-Project-02.msg import Sensor_range
 
 def callback(data):
     print "yeet: "
@@ -23,7 +23,7 @@ def callback(data):
     msg = Sensor_range
     msg.z1 = x_range
     msg.z2 = y_range
-    pub = rospy.Publisher('sensor_x_range', Sensor_range, queue_size=10)
+    pub = rospy.Publisher('sensor_range', Sensor_range, queue_size=10)
     pub.publish(msg)
 
     
