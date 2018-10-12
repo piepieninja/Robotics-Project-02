@@ -1,0 +1,2 @@
+
+-DCATKIN_DEVEL_PREFIX=/home/parallels/Robotics-Project-02/devel -DCMAKE_INSTALL_PREFIX=/home/parallels/Robotics-Project-02/install -G Unix Makefiles
