@@ -8,9 +8,9 @@ from std_msgs.msg import String
 def callback(data):
     print "yeet: "
     print data.pose.pose
-    x = odom.pose.pose.position.x
-    y = odom.pose.pose.position.y
-    z = odom.pose.pose.position.z
+    x = data.pose.pose.position.x
+    y = data.pose.pose.position.y
+    z = data.pose.pose.position.z
     # do something ...
     # ...
     # profit?
