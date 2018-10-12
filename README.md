@@ -19,3 +19,17 @@ To run (link: http://wiki.ros.org/pr2_simulator/Tutorials) :
 $ roslaunch gazebo_ros empty_world.launch
 $ roslaunch pr2_gazebo pr2.launch
 ```
+To move install pr2_teleop (link: http://wiki.ros.org/pr2_simulator/Tutorials/WorkingWithGazeboOverRos):
+```bash
+sudo apt-get install ros-kinetic-pr2-teleop
+```
+
+Then type:
+```bash
+$ roslaunch pr2_teleop teleop_keyboard.launch
+```
+
+Control keys:
+Use 'WASD' to translate
+Use 'QE' to yaw
+Press 'Shift' to run
