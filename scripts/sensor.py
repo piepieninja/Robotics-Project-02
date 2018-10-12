@@ -5,7 +5,7 @@ import random
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String, Float64
-from Robotics-Project-02.msg import Sensor_range
+from Robotics_Project_02.msg import Sensor_range
 
 def callback(data):
     print "yeet: "
