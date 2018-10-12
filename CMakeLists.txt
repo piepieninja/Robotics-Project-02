@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_ros
   roscpp
   rospy
+  std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -47,8 +49,9 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
+add_message_files(
+    FILES
+    Sensor_range.msg
 #   Message1.msg
 #   Message2.msg
 # )
@@ -69,8 +72,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
+   DEPENDENCIES
+   std_msgs  # Or other packages containing msgs
 # )
 
 ################################################
@@ -105,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES team-c-rulez
-#  CATKIN_DEPENDS gazebo_ros roscpp rospy
+  CATKIN_DEPENDS gazebo_ros roscpp rospy std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
