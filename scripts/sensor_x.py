@@ -4,7 +4,7 @@ import random
 # imports
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from nav_msgs.msg import Odometry
-from std_msgs.msg import String
+from std_msgs.msg import String, Float64
 
 def callback(data):
     print "yeet: "
