@@ -23,7 +23,7 @@ def callback(data):
     # modify x_range 
     # modify y_range
     # publish values to the guy
-    msg = Sensor_range
+    msg = Sensor_range()
     msg.z1 = x_range
     msg.z2 = y_range
     pub = rospy.Publisher('sensor_range', Sensor_range, queue_size=10)
