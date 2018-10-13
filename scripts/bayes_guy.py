@@ -19,6 +19,8 @@ def callback(sensor_data,odom_data,control_data):
     
 def listener():
     print "pls"
+    rospy.init_node('bayes_guy', anonymous=True)
+    
     sensor_sub  = message_filters.Subscriber('sensor_range', Sensor_range)
     odom_sub    = message_filters.Subscriber('base_odometry/odom', Odometry)
     control_sub = message_filters.Subscriber('base_controller/command', Twist)
