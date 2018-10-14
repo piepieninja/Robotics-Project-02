@@ -11,7 +11,7 @@ from Robotics_Project_02.msg import Sensor_range
 
 
 
-def callback(sensor_data,odom_data,control_data):
+def callback(sensor_data,odom_data, control_data):
     print "yeet: "
     print sensor_data
     print odom_data
@@ -27,8 +27,8 @@ def listener():
     sensor_sub  = message_filters.Subscriber("sensor_range", Sensor_range)
     odom_sub    = message_filters.Subscriber("base_odometry/odom", Odometry)
     control_sub = message_filters.Subscriber("base_controller/command", Twist)
-    
-    ts = message_filters.TimeSynchronizer([sensor_sub,odom_sub,control_sub], 10)
+    #changed timeSynch to approximateTimeSynch so as to allow bayes guy to capture messages in 0.3 sec interval and ones with no headers(command topic). 
+    ts = message_filters.ApproximateTimeSynchronizer([sensor_sub,odom_sub, control_sub], 10, 0.3, allow_headerless=True)
     ts.registerCallback(callback)
 
     rospy.spin()

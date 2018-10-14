@@ -34,6 +34,7 @@ def callback(data):
     y = data.pose.pose.position.y
     z = data.pose.pose.position.z
     msg = sense(x,y)
+    msg.header = data.header
     print msg
     pub = rospy.Publisher('sensor_range', Sensor_range, queue_size=10)
     pub.publish(msg)
