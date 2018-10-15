@@ -52,6 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
     FILES
     Sensor_range.msg
+    Motion.msg
 #   Message1.msg
 #   Message2.msg
 )

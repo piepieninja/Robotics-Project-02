@@ -4,9 +4,11 @@ from __future__ import print_function
 
 import roslib; roslib.load_manifest('teleop_twist_keyboard')
 import rospy
+import numpy
 from random import randint
 
 from geometry_msgs.msg import Twist
+from Robotics_Project_02.msg import Motion
 
 import sys, select, termios, tty
 
@@ -77,6 +79,7 @@ if __name__=="__main__":
 	
 	#pub = rospy.Publisher('cmd_vel', Twist, queue_size = 1)
         pub = rospy.Publisher('base_controller/command', Twist, queue_size = 1)
+	send = rospy.Publisher('motion_model', Motion, queue_size = 1)
 	rospy.init_node('teleop_twist_keyboard')
 
 	speed = rospy.get_param("~speed", 1.0)
@@ -143,6 +146,13 @@ if __name__=="__main__":
                           count -= 1
                         print("movement complete. you can enter next command now")
                         adjustment = 0
+			mot = Motion()
+			mot.axis = now_axis
+			if (mot.axis == 'x'):
+			  mot.dist = x
+			else:
+			  mot.dist = y
+			send.publish(mot)
                         
 
 	except Exception as e:
