@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html ng-app="gazebo">
+<head>
+  <base href="/">
+  <title>Gazebo  : Tutorial : Building Editor</title>
+  <meta name="description" content="The Gazebo robot simulation"/>
+  <meta name="author" content="OSRF"/>
+
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+   <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/gazebo-0b2620068a8c04a28f40aa610daa1ce7d82cfb61be5d89eedf68fce9d11462dd.ico" />
+  <link rel="stylesheet" media="all" href="/assets/application-29f6c719a56553f4c8e877326804e002ec9af655314f948f98fedb7438ab4e72.css" data-turbolinks-track="true" />
+  <script src="/assets/application-023e6849c952ef490974f76f6a742e228ae278d82d1afd1f0a9adf5a70b8c97b.js" data-turbolinks-track="true"></script>
+ <script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="/assets/chartkick-9f2391bd3558aa202d115773075a996805443b4701065e0f1fe5ca4291098655.js"></script>
+
+  <meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="eEEVOQ85M/lMlFEZIYNkfqpCczCmWmzxCstF0aT71JvXxOyI4yTHVnBImK2ZEIv4/D7kgnzKdx0B6B7b8mOY9g==" />
+</head>
+<body>
+
+<a id="top"></a>
+
+<div class="wrap">
+
+<div id="nav" class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle"
+              data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/"><img
+        src="/assets/masthead-0bd44817978df8069f427d8ca1657998789065a2b242edfd1a3d8ab4a329dd4c.png" alt="gazebo" height='20'/></a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class='active'><a href="/tutorials">Tutorials</a></li>
+        <li class=''><a href='/download'>Download</a></li>
+        <li class=''><a href="/blog.html">Blog</a></li>
+        <li class=''><a href="/media">Media</a></li>
+        <li class=''><a href="/projects">Projects</a></li>
+      </ul>
+
+      <!--
+      < if user_signed_in? %>
+      <ul class="nav navbar-nav navbar-right pull-right text-right">
+        <li class='dropdown'>
+        <a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-expanded='false'><= current_user.email[/[^@]+/] %><span class='caret'></span>
+          <ul class='dropdown-menu' role='menu'>
+            <li><a href='/users/edit'>Settings</a></li>
+            < if current_user.admin %>
+              <li><a href='/users/sign_up'>New user</a></li>
+            <end%>
+            <li><a href='/logout'>Logout</a></li>
+          </ul>
+          </li>
+      </ul>
+      <end%>
+      -->
+
+      <!-- Search box form -->
+      <div class="col-sm-3 col-md-3 pull-right">
+        <form class="navbar-form" role="search" action="search"
+              id="cse-search-box-form-id">
+          <div class="input-group">
+            <input type="text" class="form-control" placeHolder="Search"
+                   name="Q" id="cse-search-input-box-id" autocomplete="off">
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+<div class='flashes'>
+</div>
+
+<div class="container-fluid">
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/lang-matlab.js"></script>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/lang-proto.js"></script>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/lang-tex.js"></script>
+
+  <div class="row">
+    <div class="col-xs-4 text-left">
+      <a href='/tutorials?cat=install'><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-8 col-sm-7">
+      <h1 id="tutorial_title" style="margin-bottom:0px">Building Editor</h1>
+    </div>
+
+    <!-- Only display version numbers and edit button for non-guided tutorials -->
+    <div class="col-md-4 col-sm-5 hidden-xs" style="margin-top: 30px">
+      <form class="form-inline" role="form">
+        <div class="form-group col-xs-12">
+          <a href=https://bitbucket.org/osrf/gazebo_tutorials/src/default/building_editor/tutorial.md role="button"
+            class="form-control btn btn-primary pull-right"
+            style="width: 60px; margin-left: 10px">Edit</a>
+          <select class="form-control pull-right"
+            style="width: 140px" id="ver"
+            onchange='if (this.value) window.location.href="/tutorials?cat=install&tut=building_editor&ver=" + this.value'>
+                <option selected value='5%2B'>Version: 5+</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <hr style="margin-top: 8px"/>
+  <div class="row">
+
+    <div class="col-md-3 max-width-400 hidden-sm hidden-xs" style="width: 300px">
+      <div class="toc" data-spy="affix" data-offset-top="200">
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">Table of Contents</a></h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <div id="toc" class=""></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-8">
+      <p>This tutorial describes the process of creating a building using the Building Editor.</p>
+
+<h1>Overview</h1>
+
+<h2>Open the Building Editor</h2>
+
+<ol>
+<li><p>Make sure Gazebo is <a href="http://gazebosim.org/tutorials?cat=install">installed</a>.</p></li>
+<li><p>Start up gazebo.</p>
+
+<pre><code class="prettyprint">$ gazebo
+</code></pre></li>
+<li><p>On the <code class="prettyprint">Edit</code> menu, go to <code class="prettyprint">Building Editor</code>, or hit <code class="prettyprint">Ctrl+B</code> to open the editor.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/empty_editor.png' width='800px'/></p></li>
+</ol>
+
+<h2>Graphical user interface</h2>
+
+<p>The editor is composed of the following 3 areas:</p>
+
+<ol>
+<li><p>The <strong>Palette</strong>, where you can choose features and materials for your building.</p></li>
+<li><p>The <strong>2D View</strong>, where you can import a floor plan to trace over (optional) and insert walls, windows, doors and stairs.</p></li>
+<li><p>The <strong>3D View</strong>, where you can see a preview of your building. It is also where you can assign colors and textures to different parts of your building.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/editor_zones.png' width='800px'/></p></li>
+</ol>
+
+<h1>Import a floor plan</h1>
+
+<p>You may create a scene from scratch, or use an existing image as a template to trace over. This image can be, for example, a 2D laser scan of a building.</p>
+
+<p>Click <a href="https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/floorplan.png">here</a> to get an example floor plan, then proceed as follows:</p>
+
+<ol>
+<li><p>Click on the <code class="prettyprint">Import</code> button. The <code class="prettyprint">Import Image</code> dialog will come up.</p></li>
+<li><p>Step 1: Choose the image you previously saved on your computer and click <code class="prettyprint">Next</code>.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/import_step_1.png' width='800px'/></p></li>
+<li><p>Step 2: To make sure the walls you trace over the image come up in the correct scale, you must set the image&#39;s resolution in pixels per meter (<code class="prettyprint">px/m</code>). If we knew the resolution, we could directly type it in the dialog and click <code class="prettyprint">Ok</code>. In this example we don&#39;t know the resolution, but we know the real-world distance between two points in the image (for example, the top wall of 7.5 m), so we can use that to calculate the resolution:</p>
+
+<p>a. Click/release on one end of the wall. As you move the mouse, an orange line will appear as shown below.</p>
+
+<p>b. Click/release at the end of the wall to complete the line.</p>
+
+<p>c. Now type the distance in meters in the dialog (7.5 m in this case). The resolution will be automatically calculated for you based on the line you drew.</p>
+
+<p>d. You can then click <code class="prettyprint">Ok</code>.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/import_step_2.png' width='800px'/></p></li>
+<li><p>The image will appear on the 2D View properly scaled.</p>
+
+<blockquote>
+<p><strong>Tip:</strong> Once you&#39;ve added more levels, you can import a floor plan for each by repeating the same process.</p>
+</blockquote></li>
+</ol>
+
+<h1>Add features</h1>
+
+<h2>Add walls</h2>
+
+<p>Trace all walls on the floor plan as follows. Keep in mind that we will attach windows and doors to the walls later, so here you can draw the walls over them. Don&#39;t worry too much if the walls are not perfect, we will edit them later.</p>
+
+<ol>
+<li><p>On the Palette, click on <code class="prettyprint">Wall</code>.</p></li>
+<li><p>On the 2D View, click/release anywhere to start the wall. As you move the mouse, the wall&#39;s length is displayed.</p></li>
+<li><p>Click again to end the current wall and start an adjacent wall.</p></li>
+<li><p>Double-click to finish a wall without starting a new one.</p>
+
+<blockquote>
+<p><strong>Tip:</strong> You can right-click or press <code class="prettyprint">Esc</code> to cancel drawing the current wall segment.</p>
+
+<p><strong>Tip:</strong> By default, walls snap to 15° and 0.25 m increments and also to the end points of existing walls. To override this, hold <code class="prettyprint">Shift</code> while drawing.</p>
+</blockquote>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/add_walls.png' width='800px'/></p></li>
+</ol>
+
+<h2>Add windows and doors</h2>
+
+<p><strong>Note: Currently, windows and doors are simple holes in the wall.</strong></p>
+
+<p>Let&#39;s insert windows and doors at the locations shown on the floor plan.</p>
+
+<ol>
+<li><p>On the Palette, click on <code class="prettyprint">Window</code> or <code class="prettyprint">Door</code>.</p></li>
+<li><p>As you move the mouse in the 2D view, the feature to be inserted moves with it, as does its counterpart in the 3D View.</p>
+
+<blockquote>
+<p><strong>Tip:</strong> Windows and doors automatically snap to walls as you hover over them. The distances to the ends of the wall are displayed as you move.</p>
+</blockquote></li>
+<li><p>Click on the desired position to place the feature.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/add_windows_doors.png' width='800px'/></p>
+
+<blockquote>
+<p><strong>Tip:</strong> It might be difficult to see where the features are on your floor plan after the walls have been drawn on top of it. To make it easier, at the top of the 2D View, you can choose to view or hide the floor plan or features for the current level. You can also use hotkeys to toggle visibility, <code class="prettyprint">F</code> for floor plan and <code class="prettyprint">G</code> for features.</p>
+</blockquote>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/view_floorplan.png' width='640px'/></p></li>
+</ol>
+
+<h2>Add stairs</h2>
+
+<p>There are no staircases on this floor plan, but we will insert one anyways.</p>
+
+<ol>
+<li><p>On the Palette, click on <code class="prettyprint">Stairs</code>.</p></li>
+<li><p>As you move the mouse in the 2D view, the staircase to be inserted moves with it, as does its counterpart in the 3D View.</p></li>
+<li><p>Choose a position for your staircase and click to place it.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/add_stairs.png' width='800px'/></p></li>
+</ol>
+
+<h2>Add levels</h2>
+
+<p>We&#39;re pretty much done with Level 1. Let&#39;s add another level to our building so our staircase ends up somewhere.</p>
+
+<p>At the top of the 2D View, click on <code class="prettyprint">+</code> to add a level. Alternatively, right-click the 2D View and choose <code class="prettyprint">Add a level</code>.</p>
+
+<p>When a new level is added, a floor is automatically inserted. If there are stairs on the level below, a hole above the stairs will be cut out from the floor when the building is saved.</p>
+
+<blockquote>
+<p><strong>Note: Currently, all floors are rectangular.</strong></p>
+
+<p><strong>Tip:</strong> Before adding a level, make sure you have walls on the current level to build on top of.</p>
+
+<p><strong>Tip:</strong> Currently, all the walls from the level below are copied to the new level, with default materials. No other features are copied. You can manually delete the walls you don&#39;t want.</p>
+</blockquote>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/add_level.png' width='800px'/></p>
+
+<h1>Edit your building</h1>
+
+<p><strong>Note: Be careful when editing your building; the editor currently has no option to undo your actions.</strong></p>
+
+<blockquote>
+<p><strong>Tip:</strong> All measurements are in meters.</p>
+</blockquote>
+
+<h2>Change levels</h2>
+
+<p>Since we added a level, we were brought to the new level in the 2D view. You can go back to Level 1 by choosing it from the drop-down list at the top of the 2D View.</p>
+
+<blockquote>
+<p><strong>Tip:</strong> The level currently selected in the 2D View will appear as semi-transparent in the 3D View and all levels below it will appear opaque. Levels above will be hidden - but keep in mind they are still part of your building!</p>
+</blockquote>
+
+<p>We can also edit some level configurations if we want.</p>
+
+<ul>
+<li>Double-click the 2D View to open an inspector with level configuration options. Alternatively, right-click and choose <code class="prettyprint">Open Level Inspector</code>.</li>
+</ul>
+
+<p>You may have added levels that you don&#39;t want, or perhaps made a mess in the current level and would like to start it over.</p>
+
+<ul>
+<li><p>To delete the current level, either press the <code class="prettyprint">-</code> button at the top of the 2D View, or right-click and choose <code class="prettyprint">Delete Level</code>.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/edit_level.png' width='640px'/></p></li>
+</ul>
+
+<h2>Edit walls</h2>
+
+<p>We drew a lot of walls earlier, but maybe they didn&#39;t turn out exactly the way we wanted.</p>
+
+<ul>
+<li><p>In the 2D View, click on the wall to be edited.</p>
+
+<p>a. Translate the wall by dragging it to a new position.</p>
+
+<p>b. Resize or rotate the wall by dragging one of its end points.</p>
+
+<blockquote>
+<p><strong>Tip:</strong> By default, walls snap to 15° and 0.25 m increments. To override this, hold <code class="prettyprint">Shift</code> while drawing.</p>
+</blockquote></li>
+<li><p>Double-click a wall in the 2D View to open an inspector with configuration options. Alternatively, right-click and choose <code class="prettyprint">Open Wall Inspector</code>. Edit some fields and press <code class="prettyprint">Apply</code> to preview the changes.</p></li>
+<li><p>To delete a wall, either press the <code class="prettyprint">Delete</code> key while it is selected, or right-click the wall in the 2D View and choose <code class="prettyprint">Delete</code>.</p>
+
+<blockquote>
+<p><strong>Tip:</strong> Editing a wall takes attached walls into account.</p>
+
+<p><strong>Tip:</strong> Deleting a wall deletes all doors and windows attached to it.</p>
+</blockquote>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/edit_walls.png' width='640px'/></p></li>
+</ul>
+
+<h2>Edit windows and doors</h2>
+
+<p>Now let&#39;s play around with windows and doors. As we did for the walls, we can manipulate windows and doors more precisely in a few different ways.</p>
+
+<ul>
+<li><p>In the 2D View, click on the feature to be edited.</p>
+
+<p>a. Translate the feature by dragging it to a new position. Remember that windows and doors automatically snap to walls and it doesn&#39;t make much sense to have them detached from any walls, as they represent holes in a wall.</p>
+
+<p>b. Rotate the feature by dragging its rotation handle. Currently, as long as they are attached to a wall, their orientation doesn&#39;t make a difference.</p>
+
+<p>c. Resize the feature&#39;s width by dragging one of the end points.</p></li>
+<li><p>Double-click a feature in the 2D View to open an inspector with configuration options. Alternatively, right-click and choose <code class="prettyprint">Open Window/Door Inspector</code>.</p></li>
+<li><p>To delete a feature, either press the <code class="prettyprint">Delete</code> key while it is selected, or right-click it in the 2D View and choose <code class="prettyprint">Delete</code>.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/edit_windows_doors.png' width='640px'/></p></li>
+</ul>
+
+<h2>Edit stairs</h2>
+
+<p>Finally, let&#39;s edit the staircase we inserted earlier. Since it is not on the floor plan, we can get creative and resize it as we want.</p>
+
+<ul>
+<li><p>In the 2D View, click on the staircase to select it.</p>
+
+<p>a. Translate the staircase by dragging it to a new position.</p>
+
+<p>b. Rotate the staircase in multiples of 90° by dragging its rotation handle.</p>
+
+<p>c. Resize the staircase by dragging one of the end nodes.</p></li>
+<li><p>Double-click the staircase in the 2D View to open an inspector with configuration options. Alternatively, right-click and choose <code class="prettyprint">Open Stairs Inspector</code>.</p></li>
+<li><p>To delete the staircase, either press the <code class="prettyprint">Delete</code> key while it is selected, or right-click and choose <code class="prettyprint">Delete</code>.</p></li>
+</ul>
+
+<blockquote>
+<p><strong>Tip:</strong> In the 2D View, staircases are visible on both the start and end levels.</p>
+</blockquote>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/edit_stairs.png' width='640px'/></p>
+
+<h2>Add colors and textures</h2>
+
+<p>Now that everything is properly placed and sized, you can assign colors and textures to walls, floors and staircases. Remember that windows and doors are only holes on the wall and therefore cannot have materials.</p>
+
+<blockquote>
+<p><strong>Tip:</strong> The default color is white and the default texture is none.</p>
+</blockquote>
+
+<p>There are two ways to add colors and textures to your building:</p>
+
+<h3>From Inspectors</h3>
+
+<p>You can add color and texture to walls, stairs and floors from the <code class="prettyprint">Wall Inspector</code>, <code class="prettyprint">Stairs Inspector</code> and <code class="prettyprint">Level Inspector</code> respectively. Simply open the inspector, select your materials and press <code class="prettyprint">Apply</code>.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/color_texture_inspector.png' width='640px'/></p>
+
+<h3>From the Palette</h3>
+
+<p>Colors and textures can be chosen from the Palette and assigned to items on your building by clicking on them in the 3D View.</p>
+
+<ol>
+<li><p>Click on a color or texture in the Palette.</p></li>
+<li><p>As you move your mouse in the 3D View, hovered features will be highlighted displaying a preview of the selected material.</p></li>
+<li><p>Clicking on the highlighted feature assigns the selected material to it. You can click on as many features as you&#39;d like.</p></li>
+<li><p>When you&#39;re done with the selected material, either right-click the 3D view, or click outside any features to leave the material mode.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/color_texture_palette.png' width='800px'/></p>
+
+<blockquote>
+<p><strong>New in Gazebo 5.1:</strong> To choose a custom color, click on <code class="prettyprint">More</code> on the Palette. A dialog opens where you can specify custom colors.</p>
+</blockquote>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/custom_color.png' width='640px'/></p></li>
+</ol>
+
+<blockquote>
+<p><strong>Tip:</strong> Each feature can have only one color and one texture. The same material is assigned to all faces of the feature.</p>
+
+<p><strong>Note: Currently, it is not possible to assign custom textures on the Building Editor.</strong></p>
+</blockquote>
+
+<h1>Saving your building</h1>
+
+<p>Saving will create a <a href="http://gazebosim.org/tutorials?tut=model_structure&cat=build_robot">directory, SDF and config files</a> for your building.</p>
+
+<p>Before saving, give your building a name on the Palette.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/edit_name.png' width='200px'/></p>
+
+<p>On the top menu, choose <code class="prettyprint">File</code>, then <code class="prettyprint">Save As</code> (or hit <code class="prettyprint">Ctrl+S</code>). A dialog will come up where you can choose the location for your model.</p>
+
+<blockquote>
+<p><strong>Tip:</strong> Under <code class="prettyprint">Advanced Options</code> you can set some meta-data for your building.</p>
+</blockquote>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/save_dialog.png' width='300px'/></p>
+
+<h1>Exit</h1>
+
+<p><strong>Note: Once you exit the Building Editor, your building will no longer be editable.</strong></p>
+
+<p>When you&#39;re done creating your building and you&#39;ve saved it, go to <code class="prettyprint">File</code> and then <code class="prettyprint">Exit Building Editor</code>.</p>
+
+<p>Your building will show up in the main window. In the future, you can find the building in your <code class="prettyprint">Insert</code> tab.</p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/saved_building.png' width='800px'/></p>
+
+<p><img src='https://bitbucket.org/osrf/gazebo_tutorials/raw/default/building_editor/files/final_model_angles.png' width='800px'/></p>
+
+    </div>
+
+  </div> 
+
+</div>
+
+
+<script type="text/javascript">
+  $(function() {
+    var toc = $("#toc").tocify({
+
+      showAndHide: true, showAndHideOnScroll: false, highlightOnScroll: false, selectors: "h1, h2, h3, h4", extendPage: false, ignoreSelector: $("#tutorial_title") }).data("toc-tocify");
+    $(".optionName").popover({ trigger: "hover" });
+  });
+</script>
+
+</div>
+
+<div id="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-xs-4 text-left">
+        <p class="">&copy;2014 Open Source Robotics Foundation</p>
+      </div>
+
+      <div class="col-md-4 col-xs-4 text-center">
+        <p class="">Gazebo is open-source licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache 2.0</a></p>
+      </div>
+
+      <div class="col-md-4 col-xs-4 text-right">
+        <a href="//plus.google.com/u/0/115981436296571800301?prsrc=3" rel="publisher" target="_top" class="footer-social-link"><img src="/assets/google_gray-cc34826f560f99c7a9b7db88cd5f2db4d28fd4b3afcfa4b897435c51e3b25518.png" alt="Google+" class="footer-social"/></a>
+        <a href="https://www.youtube.com/channel/UCJyqf9XJpDoM9XnpAwW6WxA" rel="publisher" target="_top" class="footer-social-link"><img src="/assets/youtube_gray-978838444154eb6aa5e4aa38489f66d10e40361dd06a3814411c211cba013752.png" alt="YouTube" class="footer-social"/></a>
+        <a href="https://twitter.com/GazeboSim" rel="publisher" target="_top" class="footer-social-link"><img src="/assets/twitter_gray-8e9dfe74c6cab12171992a40add9a65e5bba92ac93063a4ac0eeba58c77e774a.png" alt="YouTube" class="footer-social"/></a>
+      </div>
+    </div> <!-- row -->
+  </div> <!-- container -->
+</div> <!-- footer -->
+
+</body>
+</html>
