@@ -8,6 +8,9 @@ done within existing catkin workspace: `~/catkin_ws/src` . Place this project th
 
 run: `catkin_make` to generate this project
 
+To install filterpy for python3:
+$ sudo pip3 install filterpy
+
 To install PR2 omnidirectional robot:
 ```bash
 $ sudo apt-get install ros-kinetic-pr2-gazebo
