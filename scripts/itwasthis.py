@@ -4,11 +4,9 @@ from __future__ import print_function
 
 import roslib; roslib.load_manifest('teleop_twist_keyboard')
 import rospy
-import numpy
 from random import randint
 
 from geometry_msgs.msg import Twist
-from Robotics_Project_02.msg import Motion
 
 import sys, select, termios, tty
 
@@ -34,33 +32,33 @@ CTRL-C to quit
 """
 
 moveBindings = {
-		#'i':(1,0,0,0),
-		#'o':(1,0,0,-1),
-		#'j':(0,0,0,1),
-		#'l':(0,0,0,-1),
-		#'u':(1,0,0,1),
-		#',':(-1,0,0,0),
-		#'.':(-1,0,0,1),
-		#'m':(-1,0,0,-1),
-		#'O':(1,-1,0,0),
+		'i':(1,0,0,0),
+		'o':(1,0,0,-1),
+		'j':(0,0,0,1),
+		'l':(0,0,0,-1),
+		'u':(1,0,0,1),
+		',':(-1,0,0,0),
+		'.':(-1,0,0,1),
+		'm':(-1,0,0,-1),
+		'O':(1,-1,0,0),
 		'I':(1,0,0,0),
 		'J':(0,1,0,0),
 		'L':(0,-1,0,0),
-		#'U':(1,1,0,0),
+		'U':(1,1,0,0),
 		'<':(-1,0,0,0),
-		#'>':(-1,-1,0,0),
-		#'M':(-1,1,0,0),
-		#'t':(0,0,1,0),
-		#'b':(0,0,-1,0),
+		'>':(-1,-1,0,0),
+		'M':(-1,1,0,0),
+		't':(0,0,1,0),
+		'b':(0,0,-1,0),
 	       }
 
 speedBindings={
-		#'q':(1.1,1.1),
-		#'z':(.9,.9),
-		#'w':(1.1,1),
-		#'x':(.9,1),
-		#'e':(1,1.1),
-		#'c':(1,.9),
+		'q':(1.1,1.1),
+		'z':(.9,.9),
+		'w':(1.1,1),
+		'x':(.9,1),
+		'e':(1,1.1),
+		'c':(1,.9),
 	      }
 
 def getKey():
@@ -79,7 +77,6 @@ if __name__=="__main__":
 	
 	#pub = rospy.Publisher('cmd_vel', Twist, queue_size = 1)
         pub = rospy.Publisher('base_controller/command', Twist, queue_size = 1)
-	send = rospy.Publisher('motion_model', Motion, queue_size = 1)
 	rospy.init_node('teleop_twist_keyboard')
 
 	speed = rospy.get_param("~speed", 1.0)
@@ -89,9 +86,6 @@ if __name__=="__main__":
 	z = 0
 	th = 0
 	status = 0
-        now_axis = 'x'
-        next_axis = 'x'
-        adjustment = 0
 
 	try:
 		print(msg)
@@ -103,10 +97,6 @@ if __name__=="__main__":
 				y = moveBindings[key][1]
 				z = moveBindings[key][2]
 				th = moveBindings[key][3]
-                                if (key == 'I' or key == '<'):
-                                  next_axis = 'x'
-                                else:
-                                  next_axis = 'y'
 			elif key in speedBindings.keys():
 				speed = speed * speedBindings[key][0]
 				turn = turn * speedBindings[key][1]
@@ -123,36 +113,22 @@ if __name__=="__main__":
 				if (key == '\x03'):
 					break
 
-			print("now: " + now_axis + ", next: " + next_axis)			
 			twist = Twist()
 			twist.linear.x = x*speed; twist.linear.y = y*speed; twist.linear.z = z*speed;
 			twist.angular.x = 0; twist.angular.y = 0; twist.angular.z = th*turn
                         muchness = randint(0,99)
                         if (muchness < 20):
                           muchness = 0
-                          next_axis = now_axis
                         elif (muchness < 80):
                           muchness = 1
                         elif (muchness < 100):
                           muchness = 2
-                        if (next_axis != now_axis):
-                          adjustment = 40000
-			  now_axis = next_axis
-                        count = (110120 * muchness) + adjustment
+                        count = 110120 * muchness
                         print(muchness)
-			print(adjustment)
 			while (count > 0):
                           pub.publish(twist)
                           count -= 1
                         print("movement complete. you can enter next command now")
-                        adjustment = 0
-			mot = Motion()
-			mot.axis = now_axis
-			if (mot.axis == 'x'):
-			  mot.dist = x
-			else:
-			  mot.dist = y
-			send.publish(mot)
                         
 
 	except Exception as e:
