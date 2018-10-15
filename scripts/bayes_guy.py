@@ -81,14 +81,14 @@ def motion_model_update(axis, distance):
     if axis == "y":
         prior_y = predict(posterior_y, distance, kernel)
 
-def callback(sensor_data,odom_data, control_data):
+def callback(sensor_data, control_data):
     print "yeet: "
-    print sensor_data
-    print odom_data
-    print control_data
+    #print sensor_data
+    #print odom_data
+    #print control_data
     x = sensor_data.z1
     y = sensor_data.z2
-    motion_model_update(axis, distance)
+    motion_model_update(control_data.axis,control_data.dist)
     obs_model(x,y)
     # get and print 5x5 max region in x
     max = 0
@@ -102,12 +102,6 @@ def callback(sensor_data,odom_data, control_data):
     for x in range (max_i-3,max_i+3):
         temp.append(posterior_x[x])
     print str(temp)
-	
-	
-
-
-
-
 	#for i in posterior_x:
     #    if posterior_x[i] != 0:
     #        print(
@@ -117,10 +111,10 @@ def listener():
     rospy.init_node('bayes_guy', anonymous=True)
     
     sensor_sub  = message_filters.Subscriber("sensor_range", Sensor_range)
-    odom_sub    = message_filters.Subscriber("base_odometry/odom", Odometry)
+    #odom_sub    = message_filters.Subscriber("base_odometry/odom", Odometry)
     control_sub = message_filters.Subscriber("motion_model", Motion)
     #changed timeSynch to approximateTimeSynch so as to allow bayes guy to capture messages in 0.3 sec interval and ones with no headers(command topic). 
-    ts = message_filters.ApproximateTimeSynchronizer([sensor_sub,odom_sub, control_sub], 10, 0.3, allow_headerless=True)
+    ts = message_filters.ApproximateTimeSynchronizer([sensor_sub, control_sub], 10, 0.3, allow_headerless=True)
     ts.registerCallback(callback)
 
     rospy.spin()
