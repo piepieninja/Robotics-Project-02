@@ -42,3 +42,8 @@ http://docs.ros.org/diamondback/api/geometry_msgs/html/msg/PoseWithCovarianceSta
 
 this is `/robot_pose_ekf/odom_combined`
 >>>>>>> 8b2fc8220f3391b770dc717065df03d519612901
+
+Christian's commands:
+roslaunch Robotics_Project_02 pr2Room.launch
+ROBOT_INITIAL_POSE="-x 2 -y 2" roslaunch pr2_gazebo pr2_no_arms.launch
+rosrun Robotics_Project_02 my_keyboard.py
