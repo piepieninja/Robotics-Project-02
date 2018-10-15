@@ -2,6 +2,7 @@
 import rospy
 import random
 import message_filters
+import numpy as np
 # imports
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from nav_msgs.msg import Odometry
@@ -12,35 +13,35 @@ from filterpy.discrete_bayes import normalize
 from filterpy.discrete_bayes import update
 from filterpy.discrete_bayes import predict
 
-likelihood_x = numpy.zeros(100)
-likelihood_y = numpy.zeros(100)
+likelihood_x = np.zeros(100)
+likelihood_y = np.zeros(100)
 likelihood_x[2] = 1
 likelihood_y[2] = 1
-prior_x = numpy.zeros(100)
-prior_y = numpy.zeros(100)
+prior_x = np.zeros(100)
+prior_y = np.zeros(100)
 prior_x[2] = 1
 prior_y[2] = 1
-posterior_x = numpy.zeros(100)
-posterior_y = numpy.zeros(100)
+posterior_x = np.zeros(100)
+posterior_y = np.zeros(100)
 #check if Twist is the correct message type
 #pub = rospy.Publisher("/BAYES_OUTPUT", Twist, queue_size=10) 
 gaussian_values = [.06, .24, 0.4, .24, .06]
 kernel = [.1, .8, .1]
 
 def obs_update(x, y):
-    likelihood_x = numpy.zeros(100)
+    likelihood_x = np.zeros(100)
     likelihood_x[x] = gaussian_values[2]
-    if x = 99:    
+    if x == 99:    
         likelihood_x[x-2] = gaussian_values[0]
         likelihood_x[x-1] = gaussian_values[1]
-    elif x = 98:
+    elif x == 98:
         likelihood_x[x-1] = gaussian_values[1]
         likelihood_x[x-2] = gaussian_values[0]
         likelihood_x[x+1] = gaussian_values[3]
-    elif x = 0:
+    elif x == 0:
         likelihood_x[x+1] = gaussian_values[3]
         likelihood_x[x+2] = gaussian_values[4]
-    elif x = 1:
+    elif x == 1:
         likelihood_x[x+1] = gaussian_values[3]
         likelihood_x[x+2] = gaussian_values[4]     
         likelihood_x[x-1] = gaussian_values[1]
@@ -51,19 +52,19 @@ def obs_update(x, y):
         likelihood_x[x-2] = gaussian_values[0]
     posterior_x = update(likelihood_x, prior_x)
   
-    likelihood_y = numpy.zeros(100)
+    likelihood_y = np.zeros(100)
     likelihood_y[y] = gaussian_values[2]
-    if x = 99:    
+    if x == 99:    
         likelihood_y[y-2] = gaussian_values[0]
         likelihood_y[y-1] = gaussian_values[1]
-    elif x = 98:
+    elif x == 98:
         likelihood_y[y-1] = gaussian_values[1]
         likelihood_y[y-2] = gaussian_values[0]
         likelihood_y[y+1] = gaussian_values[3]
-    elif x = 0:
+    elif x == 0:
         likelihood_y[y+1] = gaussian_values[3]
         likelihood_y[y+2] = gaussian_values[4]
-    elif x = 1:
+    elif x == 1:
         likelihood_y[y+1] = gaussian_values[3]
         likelihood_y[y+2] = gaussian_values[4]     
         likelihood_y[y-1] = gaussian_values[1]
