@@ -49,3 +49,9 @@ Each command will move the robot in the specified direction with the following m
 After the command is given, a message will appear in the ‘my_keyboard.py’ xterm window telling you that the movement is complete and you can enter the next command.
 
 The sensor data is calculated with gaussian error (sigma = 0.3) = gaussian_values = [0.0, 0.04779, 0.904419, 0.04779, 0.0]
+
+CONTRIBUTIONS:
+Christian: implemented keyboard script, world, launch file, part of README.md, message file
+Caleb: implemented bayes script, sensor script
+Shrinidhi: implemented bayes script, sensor script
+Kyle: researched robot, implemented bayes script
