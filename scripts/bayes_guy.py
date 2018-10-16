@@ -5,6 +5,7 @@ import message_filters
 import numpy as np
 import matplotlib.pyplot as plt
 # imports
+from PIL import Image
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from nav_msgs.msg import Odometry
 from std_msgs.msg import String, Float64
@@ -132,10 +133,21 @@ def motion_model_update(axis, distance):
     lastPoseY += yOffset
 
 def heatmap_viewer():
-    print "showing heatmap..."
+    print "generating heatmap..."
     world_mat = np.matmul(posterior_x, posterior_y)
-    plt.imshow(world_mat, cmap='hot', interpolation='nearest')
-    plt.show()
+    img = Image.new( 'RGB', (100,100), "black") # create a new black image
+    pixels = img.load() # create the pixel map
+    for x in range(0,100):
+            for y in range(0,100):
+                color = int(round(255 * world_mat[x,y])) 
+                if color > 255:
+                    color = 255
+                pixels[x,y] = (color,100,100)
+    #plt.imshow(world_mat, cmap='hot', interpolation='nearest')
+    #plt.show()
+    img.show()
+    img.save("current_step.png")
+    
     
 def callback(sensor_data, control_data):
     print "yeet: "
