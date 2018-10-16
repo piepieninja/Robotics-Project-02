@@ -27,7 +27,7 @@ posterior_x[2] = 1.0
 posterior_y[2] = 1.0
 #check if Twist is the correct message type
 #pub = rospy.Publisher("/BAYES_OUTPUT", Twist, queue_size=10) 
-gaussian_values = [.06, .24, 0.4, .24, .06]
+gaussian_values = [0.00135, 0.157305, 0.68269, 0.157305, 0.00135]
 kernel = [.1, .8, .1]
 prevX = 2
 prevY = 2
