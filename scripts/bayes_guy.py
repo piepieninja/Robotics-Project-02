@@ -28,9 +28,10 @@ posterior_y = np.zeros(100)
 gaussian_values = [.06, .24, 0.4, .24, .06]
 kernel = [.1, .8, .1]
 
-def obs_update(x, y):
+def obs_model(x, y):
     likelihood_x = np.zeros(100)
     likelihood_x[x] = gaussian_values[2]
+    print("Likelihood_x  : ", likelihood_x)
     if x == 99:    
         likelihood_x[x-2] = gaussian_values[0]
         likelihood_x[x-1] = gaussian_values[1]
@@ -50,10 +51,14 @@ def obs_update(x, y):
         likelihood_x[x+2] = gaussian_values[4]     
         likelihood_x[x-1] = gaussian_values[1]     
         likelihood_x[x-2] = gaussian_values[0]
+    print("Likelihood_x  after gaussian: ", likelihood_x)
+    print("prior_x  for posterior: ", prior_x)
     posterior_x = update(likelihood_x, prior_x)
-  
+    print("Posterior_x  after UPDATE: ", posterior_x)
+
     likelihood_y = np.zeros(100)
     likelihood_y[y] = gaussian_values[2]
+    print("Likelihood_y  : ", likelihood_y)
     if x == 99:    
         likelihood_y[y-2] = gaussian_values[0]
         likelihood_y[y-1] = gaussian_values[1]
@@ -73,7 +78,9 @@ def obs_update(x, y):
         likelihood_y[y+2] = gaussian_values[4]     
         likelihood_y[y-1] = gaussian_values[1]     
         likelihood_y[y-2] = gaussian_values[0]
+    print("Likelihood_y after gaussian : ", likelihood_y)
     posterior_y = update(likelihood_y, prior_y)
+    print("Posterior_y  after UPDATE: ", posterior_y)
 
 def motion_model_update(axis, distance):
     if axis == "x":
@@ -88,8 +95,15 @@ def callback(sensor_data, control_data):
     #print control_data
     x = sensor_data.z1
     y = sensor_data.z2
+    print("prior_x before motion update : ", prior_x)
+    print("prior_y before motion update : ", prior_y)
     motion_model_update(control_data.axis,control_data.dist)
-    obs_model(x,y)
+    print("prior_x after motion update : ", prior_x)
+    print("prior_y after motion update : ", prior_y)
+    print("sensor_x before obs model update : ", x)
+    print("sensor_y before obs model update : ", y)
+    #Keep sensor readings discrete
+    obs_model(round(x),round(y))
     # get and print 5x5 max region in x
     max = 0
     max_i = -1

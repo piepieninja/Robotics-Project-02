@@ -15,8 +15,8 @@ def sense(true_x,true_y):
     # calculate the distances w/ the sensor model
     mu = 0.0
     sigma = 1.0
-    x_range = (x_limit - true_x) + random.gauss(mu, sigma)
-    y_range = (y_limit - true_y) + random.gauss(mu, sigma)
+    x_range = (true_x) + random.gauss(mu, sigma)
+    y_range = (true_y) + random.gauss(mu, sigma)
     if (x_range > sensor_limit):
         x_range = sensor_limit
     if (y_range > sensor_limit):
