@@ -162,6 +162,7 @@ def callback(sensor_data, control_data):
             max = posterior_x[x]
             max_i = x
     print "X max " + str(max) + " at index: " + str(max_i)
+    x_max = max_i
     temp = []	
     for x in range (max_i-3,max_i+4):
         temp.append(posterior_x[x])
@@ -174,10 +175,18 @@ def callback(sensor_data, control_data):
             max = posterior_y[y]
             max_i = y
     print "Y max " + str(max) + " at index: " + str(max_i)
+    y_max = max_i
     temp = []	
     for y in range (max_i-3,max_i+4):
         temp.append(posterior_y[y])
     print str(temp)
+    location = Pose()
+    location.position.x = float(x_max)
+    location.position.y = float(y_max)
+    location.position.z = 0.0
+    pub = rospy.Publisher('bayes_loc', Pose, queue_size=10)
+    pub.publish(location)
+
     heatmap_viewer()
     # end printing out
     
