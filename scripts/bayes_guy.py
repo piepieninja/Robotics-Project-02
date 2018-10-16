@@ -165,6 +165,7 @@ def callback(sensor_data, control_data):
     for y in range (max_i-3,max_i+4):
         temp.append(posterior_y[y])
     print str(temp)
+    heatmap_viewer()
     # end printing out
     
 def listener():
