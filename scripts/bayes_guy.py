@@ -35,6 +35,12 @@ lastPoseX = 2
 lastPoseY = 2
 
 def obs_model(x, y):
+    global prevX
+    global prevY
+    global prior_x
+    global prior_y
+    global posterior_x
+    global posterior_y
     likelihood_x = np.zeros(100, dtype=float)
     g_i = 0;
     for i in range(x-2,100):
@@ -57,10 +63,7 @@ def obs_model(x, y):
         g_i += 1
     #print 'likelihood_y:'
     #print likelihood_y
-    global prior_x
-    global prior_y
-    global posterior_x
-    global posterior_y
+    
     prior_x = predict(posterior_x,x-prevX,gaussian_values)
     prior_y = predict(posterior_y,y-prevY,gaussian_values)
     posterior_x = update(likelihood_x, prior_x)    
@@ -69,12 +72,17 @@ def obs_model(x, y):
     #print posterior_x
     #print 'post y:'
     #print posterior_y
-    global prevX
-    global prevY
+    
     prevX = x
     prevY = y
 
 def motion_model_update(axis, distance):
+    global lastPoseX
+    global lastPoseY
+    global prior_x
+    global prior_y
+    global posterior_x
+    global posterior_y
     space = 0
     xOffset = 0
     yOffset = 0
@@ -83,17 +91,15 @@ def motion_model_update(axis, distance):
     if axis == "x":
       xOffset = distance
       space = 2 * distance
-      for i in range(lastPoseX+space,100):
+      for i in range(lastPoseX+distance-1, 100):
         if g_i == 3:
           break
         if i < 0:
 	  continue
         likelihood_x[i] = kernel[g_i]
         g_i += 1
-    else:
-      likelihood_x[lastPoseX] = 1
-    print 'likelihood_x:'
-    print likelihood_x
+    #print 'likelihood_x:'
+    #print likelihood_x
     
     space = 0
     likelihood_y = np.zeros(100, dtype=float)
@@ -101,38 +107,32 @@ def motion_model_update(axis, distance):
     if axis == "y":
       yOffset = distance
       space = 2 * distance
-      for i in range(lastPoseY+space,100):
+      for i in range(lastPoseY+distance-1, 100):
           if g_i == 3:
               break
 	  if i < 0:
 	    continue
           likelihood_y[i] = kernel[g_i]
           g_i += 1
-    else:
-      likelihood_y[lastPoseY] = 1
-    print 'likelihood_y:'
-    print likelihood_y
+    #print 'likelihood_y:'
+    #print likelihood_y
 
-    global prior_x
-    global prior_y
-    global posterior_x
-    global posterior_y
-    prior_x = predict(posterior_x,xOffset,kernel)
-    prior_y = predict(posterior_y,yOffset,kernel)
-    posterior_x = update(likelihood_x, prior_x)    
-    posterior_y = update(likelihood_y, prior_y)
-    print 'post x:'
-    print posterior_x
-    print 'post y:'
-    print posterior_y
-    global lastMovPoseX
-    global lastMovPoseY
-    lastPoseX += distance
-    lastPoseY += distance
+    if axis=="x":
+      prior_x = predict(posterior_x,xOffset,kernel)
+      posterior_x = update(likelihood_x, prior_x)  
+    if axis=="y":
+      prior_y = predict(posterior_y,yOffset,kernel)  
+      posterior_y = update(likelihood_y, prior_y)
+    #print 'post x:'
+    #print posterior_x
+    #print 'post y:'
+    #print posterior_y
+    lastPoseX += xOffset
+    lastPoseY += yOffset
     
 def callback(sensor_data, control_data):
     print "yeet: "
-    #motion_model_update(control_data.axis,control_data.dist)
+    motion_model_update(control_data.axis,control_data.dist)
     obs_model(int(round(sensor_data.z1)),int(round(sensor_data.z2)))
     # get and print 5x5 max region in x
     max = 0.0
