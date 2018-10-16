@@ -135,12 +135,12 @@ def motion_model_update(axis, distance):
 
 def heatmap_viewer():
     print "generating heatmap..."
-    world_mat = np.matmul(posterior_x.transpose(), posterior_y)
     img = Image.new( 'RGB', (100,100), "black") # create a new black image
     pixels = img.load() # create the pixel map
     for x in range(0,100):
             for y in range(0,100):
-                color = int(round(255 * world_mat[x,y])) 
+                prob = posterior_x[x] * posterior_y[y]
+                color = int(round(255 * prob)) 
                 if color > 255:
                     color = 255
                 pixels[x,y] = (color,100,100)
