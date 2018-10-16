@@ -6,7 +6,6 @@
 
   <include file="$(find pr2_gazebo)/launch/pr2_no_arms.launch">
     <node name="spawn_pr2_model" pkg="gazebo_ros" type="spawn_model">
-      <env name="ROBOT_INITIAL_POSE" value="-x 2 -y 2"/>
     </node>
   </include>
   
