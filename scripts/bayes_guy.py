@@ -13,99 +13,69 @@ from filterpy.discrete_bayes import normalize
 from filterpy.discrete_bayes import update
 from filterpy.discrete_bayes import predict
 
-likelihood_x = np.zeros(100)
-likelihood_y = np.zeros(100)
-likelihood_x[2] = 1
-likelihood_y[2] = 1
-prior_x = np.zeros(100)
-prior_y = np.zeros(100)
-prior_x[2] = 1
-prior_y[2] = 1
-posterior_x = np.zeros(100)
-posterior_y = np.zeros(100)
+likelihood_x = np.zeros(100, dtype=float)
+likelihood_y = np.zeros(100, dtype=float)
+#likelihood_x[2] = 1.0
+#likelihood_y[2] = 1.0
+prior_x = np.zeros(100, dtype=float)
+prior_y = np.zeros(100, dtype=float)
+prior_x[2] = 1.0
+prior_y[2] = 1.0
+posterior_x = np.zeros(100, dtype=float)
+posterior_y = np.zeros(100, dtype=float)
+posterior_x[2] = 1.0
+posterior_y[2] = 1.0
 #check if Twist is the correct message type
 #pub = rospy.Publisher("/BAYES_OUTPUT", Twist, queue_size=10) 
 gaussian_values = [.06, .24, 0.4, .24, .06]
 kernel = [.1, .8, .1]
 
 def obs_model(x, y):
-    likelihood_x = np.zeros(100)
-    likelihood_x[x] = gaussian_values[2]
-    print("Likelihood_x  : ", likelihood_x)
-    if x == 99:    
-        likelihood_x[x-2] = gaussian_values[0]
-        likelihood_x[x-1] = gaussian_values[1]
-    elif x == 98:
-        likelihood_x[x-1] = gaussian_values[1]
-        likelihood_x[x-2] = gaussian_values[0]
-        likelihood_x[x+1] = gaussian_values[3]
-    elif x == 0:
-        likelihood_x[x+1] = gaussian_values[3]
-        likelihood_x[x+2] = gaussian_values[4]
-    elif x == 1:
-        likelihood_x[x+1] = gaussian_values[3]
-        likelihood_x[x+2] = gaussian_values[4]     
-        likelihood_x[x-1] = gaussian_values[1]
-    else:
-        likelihood_x[x+1] = gaussian_values[3]
-        likelihood_x[x+2] = gaussian_values[4]     
-        likelihood_x[x-1] = gaussian_values[1]     
-        likelihood_x[x-2] = gaussian_values[0]
-    print("Likelihood_x  after gaussian: ", likelihood_x)
-    print("prior_x  for posterior: ", prior_x)
-    posterior_x = update(likelihood_x, prior_x)
-    print("Posterior_x  after UPDATE: ", posterior_x)
-
-    likelihood_y = np.zeros(100)
-    likelihood_y[y] = gaussian_values[2]
-    print("Likelihood_y  : ", likelihood_y)
-    if x == 99:    
-        likelihood_y[y-2] = gaussian_values[0]
-        likelihood_y[y-1] = gaussian_values[1]
-    elif x == 98:
-        likelihood_y[y-1] = gaussian_values[1]
-        likelihood_y[y-2] = gaussian_values[0]
-        likelihood_y[y+1] = gaussian_values[3]
-    elif x == 0:
-        likelihood_y[y+1] = gaussian_values[3]
-        likelihood_y[y+2] = gaussian_values[4]
-    elif x == 1:
-        likelihood_y[y+1] = gaussian_values[3]
-        likelihood_y[y+2] = gaussian_values[4]     
-        likelihood_y[y-1] = gaussian_values[1]
-    else:
-        likelihood_y[y+1] = gaussian_values[3]
-        likelihood_y[y+2] = gaussian_values[4]     
-        likelihood_y[y-1] = gaussian_values[1]     
-        likelihood_y[y-2] = gaussian_values[0]
-    print("Likelihood_y after gaussian : ", likelihood_y)
+    likelihood_x = np.zeros(100, dtype=float)
+    g_i = 0;
+    for i in range(x-2,100):
+        if g_i == 5:
+            break
+        likelihood_x[i] = gaussian_values[g_i]
+        g_i += 1
+    likelihood_y = np.zeros(100, dtype=float)
+    print 'likelihood_x:'
+    print likelihood_x
+    g_i = 0;
+    for i in range(x-2,100):
+        if g_i == 5:
+            break
+        likelihood_y[i] = gaussian_values[g_i]
+        g_i += 1
+    print 'likelihood_y:'
+    print likelihood_y
+    global prior_x
+    global prior_y
+    global posterior_x
+    global posterior_y
+    prior_x = predict(posterior_x,1,gaussian_values)
+    prior_y = predict(posterior_y,1,gaussian_values)
+    posterior_x = update(likelihood_x, prior_x)    
     posterior_y = update(likelihood_y, prior_y)
-    print("Posterior_y  after UPDATE: ", posterior_y)
+    print 'post x:'
+    print posterior_x
+    print 'post y:'
+    print posterior_y
 
 def motion_model_update(axis, distance):
     if axis == "x":
         prior_x = predict(posterior_x, distance, kernel)
+        #posterior_X = update()
     if axis == "y":
         prior_y = predict(posterior_y, distance, kernel)
 
+    
 def callback(sensor_data, control_data):
     print "yeet: "
-    #print sensor_data
-    #print odom_data
-    #print control_data
-    x = sensor_data.z1
-    y = sensor_data.z2
-    print("prior_x before motion update : ", prior_x)
-    print("prior_y before motion update : ", prior_y)
-    motion_model_update(control_data.axis,control_data.dist)
-    print("prior_x after motion update : ", prior_x)
-    print("prior_y after motion update : ", prior_y)
-    print("sensor_x before obs model update : ", x)
-    print("sensor_y before obs model update : ", y)
-    #Keep sensor readings discrete
-    obs_model(round(x),round(y))
+    #motion_model_update(control_data.axis,control_data.dist)
+    obs_model(int(round(sensor_data.z1)),int(round(sensor_data.z2)))
     # get and print 5x5 max region in x
-    max = 0
+    max = 0.0
     max_i = -1
     for x in range(0,100):
         if (posterior_x[x] > max):
@@ -113,12 +83,22 @@ def callback(sensor_data, control_data):
             max_i = x
     print "X max " + str(max) + " at index: " + str(max_i)
     temp = []	
-    for x in range (max_i-3,max_i+3):
+    for x in range (max_i-3,max_i+4):
         temp.append(posterior_x[x])
     print str(temp)
-	#for i in posterior_x:
-    #    if posterior_x[i] != 0:
-    #        print(
+    # now print y
+    max = 0.0
+    max_i = -1
+    for y in range(0,100):
+        if (posterior_y[y] > max):
+            max = posterior_y[y]
+            max_i = y
+    print "Y max " + str(max) + " at index: " + str(max_i)
+    temp = []	
+    for y in range (max_i-3,max_i+4):
+        temp.append(posterior_y[y])
+    print str(temp)
+    # end printing out
     
 def listener():
     print "pls"
