@@ -189,7 +189,7 @@ def callback(sensor_data, control_data):
     pub = rospy.Publisher('bayes_loc', Pose, queue_size=10)
     pub.publish(location)
 
-    heatmap_viewer()
+    #heatmap_viewer()
     # end printing out
     
 def listener():

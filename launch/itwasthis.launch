@@ -1,0 +1,14 @@
+<launch>
+  
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find Robotics_Project_02)/worlds/pr2Room.world"/>
+  </include>
+
+  <include file="$(find pr2_gazebo)/launch/pr2_no_arms.launch">
+    <node name="spawn_pr2_model" pkg="gazebo_ros" type="spawn_model">
+    </node>
+  </include>
+  
+  <node pkg="Robotics_Project_02" name="my_keyboard" type="my_keyboard.py" output="screen" launch-prefix="xterm -fn 10x20 -e">
+  </node>
+</launch>
