@@ -45,6 +45,9 @@ this is `/robot_pose_ekf/odom_combined`
 
 Christian's commands:
 
+From Robotics_Project_02:
+cp -r src/models/pr2Room ~/.gazebo/models
+
 roslaunch Robotics_Project_02 pr2Room.launch
 
 ROBOT_INITIAL_POSE="-x 2 -y 2" roslaunch pr2_gazebo pr2_no_arms.launch
