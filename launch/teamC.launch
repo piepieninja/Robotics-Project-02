@@ -11,4 +11,10 @@
   
   <node pkg="Robotics_Project_02" name="my_keyboard" type="my_keyboard.py" output="screen" launch-prefix="xterm -fn 10x20 -e">
   </node>
+
+  <node pkg="Robotics_Project_02" name="sensor" type="sensor.py" output="screen" launch-prefix="xterm -fn 10x20 -e">
+  </node>
+
+  <node pkg="Robotics_Project_02" name="bayesmydude" type="bayes_guy.py" output="screen" launch-prefix="xterm -fn 10x20 -e">
+  </node>
 </launch>
