@@ -7,6 +7,8 @@ Set Up:
 
 You should have gazebo_ros installed.
 
+export ROBOT_INITIAL_POSE="-x 2 -y 2"
+
 Place this project in src folder in existing catkin workspace.
 
 To install PR2 omnidirectional robot:
