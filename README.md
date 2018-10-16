@@ -50,6 +50,8 @@ After the command is given, a message will appear in the ‘my_keyboard.py’ xt
 
 The sensor data is calculated with gaussian error (sigma = 0.3) = gaussian_values = [0.0, 0.04779, 0.904419, 0.04779, 0.0]
 
+Topics to consider: localization is published in bayes_loc
+
 CONTRIBUTIONS:
 Christian: implemented keyboard script, world, launch file, part of README.md, message file
 Caleb: implemented bayes script, sensor script
