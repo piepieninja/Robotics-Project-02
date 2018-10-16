@@ -36,7 +36,7 @@ prevY = 2
 lastPoseX = 2
 lastPoseY = 2
 
-def obs_model(x, y):
+def obs_model(x, y, axis):
     global prevX
     global prevY
     global prior_x
@@ -65,11 +65,12 @@ def obs_model(x, y):
         g_i += 1
     #print 'likelihood_y:'
     #print likelihood_y
-    
-    prior_x = predict(posterior_x,x-prevX,gaussian_values)
-    prior_y = predict(posterior_y,y-prevY,gaussian_values)
-    posterior_x = update(likelihood_x, prior_x)    
-    posterior_y = update(likelihood_y, prior_y)
+    if axis=="x":
+        prior_x = predict(posterior_x,x-prevX,gaussian_values)
+        posterior_x = update(likelihood_x, prior_x)
+    if axis=="y":
+        prior_y = predict(posterior_y,y-prevY,gaussian_values)
+        posterior_y = update(likelihood_y, prior_y)
     #print 'post x:'
     #print posterior_x
     #print 'post y:'
@@ -152,7 +153,7 @@ def heatmap_viewer():
 def callback(sensor_data, control_data):
     print "yeet: "
     motion_model_update(control_data.axis,control_data.dist)
-    obs_model(int(round(sensor_data.z1)),int(round(sensor_data.z2)))
+    obs_model(int(round(sensor_data.z1)),int(round(sensor_data.z2)),control_data.axis)
     # get and print 5x5 max region in x
     max = 0.0
     max_i = -1
