@@ -3,6 +3,7 @@ import rospy
 import random
 import message_filters
 import numpy as np
+import matplotlib.pyplot as plt
 # imports
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from nav_msgs.msg import Odometry
@@ -27,7 +28,7 @@ posterior_x[2] = 1.0
 posterior_y[2] = 1.0
 #check if Twist is the correct message type
 #pub = rospy.Publisher("/BAYES_OUTPUT", Twist, queue_size=10) 
-gaussian_values = [0.00135, 0.157305, 0.68269, 0.157305, 0.00135]
+gaussian_values = [0.000088, 0.105561, 0.7887, 0.105561, 0.000088]
 kernel = [.1, .8, .1]
 prevX = 2
 prevY = 2
@@ -129,6 +130,12 @@ def motion_model_update(axis, distance):
     #print posterior_y
     lastPoseX += xOffset
     lastPoseY += yOffset
+
+def heatmap_viewer():
+    print "showing heatmap..."
+    world_mat = np.matmul(posterior_x, posterior_y)
+    plt.imshow(world_mat, cmap='hot', interpolation='nearest')
+    plt.show()
     
 def callback(sensor_data, control_data):
     print "yeet: "
