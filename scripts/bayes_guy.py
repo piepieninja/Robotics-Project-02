@@ -4,6 +4,7 @@ import random
 import message_filters
 import numpy as np
 import matplotlib.pyplot as plt
+import datetime
 # imports
 from PIL import Image
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
@@ -134,7 +135,7 @@ def motion_model_update(axis, distance):
     lastPoseY += yOffset
 
 def heatmap_viewer():
-    print "generating heatmap..."
+    #print "generating heatmap..."
     img = Image.new( 'RGB', (100,100), "black") # create a new black image
     pixels = img.load() # create the pixel map
     for x in range(0,100):
@@ -146,8 +147,9 @@ def heatmap_viewer():
                 pixels[x,y] = (color,100,100)
     #plt.imshow(world_mat, cmap='hot', interpolation='nearest')
     #plt.show()
-    img.show()
-    img.save("current_step.png")
+    #img.show()
+    name_str = "current_step" + str(datetime.now()) + ".png"
+    img.save(name_str)
     
     
 def callback(sensor_data, control_data):
@@ -161,12 +163,12 @@ def callback(sensor_data, control_data):
         if (posterior_x[x] > max):
             max = posterior_x[x]
             max_i = x
-    print "X max " + str(max) + " at index: " + str(max_i)
+    #print "X max " + str(max) + " at index: " + str(max_i)
     x_max = max_i
     temp = []	
     for x in range (max_i-3,max_i+4):
         temp.append(posterior_x[x])
-    print str(temp)
+    #print str(temp)
     # now print y
     max = 0.0
     max_i = -1
@@ -174,12 +176,12 @@ def callback(sensor_data, control_data):
         if (posterior_y[y] > max):
             max = posterior_y[y]
             max_i = y
-    print "Y max " + str(max) + " at index: " + str(max_i)
+    #print "Y max " + str(max) + " at index: " + str(max_i)
     y_max = max_i
     temp = []	
     for y in range (max_i-3,max_i+4):
         temp.append(posterior_y[y])
-    print str(temp)
+    #print str(temp)
     location = Pose()
     location.position.x = float(x_max)
     location.position.y = float(y_max)
