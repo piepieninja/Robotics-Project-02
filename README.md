@@ -2,6 +2,8 @@ assuming you could run the code before, you only need to follow these instructio
 
 after sourcing and making, in Terminal 1, run:
 
+export ROBOT_INITIAL_POSE="-x 2 -y 2"
+
 roslaunch Robotics_Project_02 teamC.launch
 
 after sourcing and making, in Terminal 2, run:
