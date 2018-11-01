@@ -1,3 +1,19 @@
+assuming you could run the code before, you only need to follow these instructions to run the code:
+
+after sourcing and making, in Terminal 1, run:
+
+roslaunch Robotics_Project_02 teamC.launch
+
+after sourcing and making, in Terminal 2, run:
+
+rostopic echo /bayes_loc
+
+
+
+
+
+
+END OF UPDATED CODE INSTRUCTIONS
 Team-C
 
 Robotics Project 02
