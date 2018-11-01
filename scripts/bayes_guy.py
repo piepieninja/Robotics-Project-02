@@ -67,10 +67,10 @@ def obs_model(x, y, axis):
     #print 'likelihood_y:'
     #print likelihood_y
     if axis=="x":
-        prior_x = predict(posterior_x,x-prevX,gaussian_values)
+        #prior_x = predict(posterior_x,x-prevX,gaussian_values)
         posterior_x = update(likelihood_x, prior_x)
     if axis=="y":
-        prior_y = predict(posterior_y,y-prevY,gaussian_values)
+        #prior_y = predict(posterior_y,y-prevY,gaussian_values)
         posterior_y = update(likelihood_y, prior_y)
     #print 'post x:'
     #print posterior_x
@@ -123,10 +123,10 @@ def motion_model_update(axis, distance):
 
     if axis=="x":
       prior_x = predict(posterior_x,xOffset,kernel)
-      posterior_x = update(likelihood_x, prior_x)  
+      #posterior_x = update(likelihood_x, prior_x)  
     if axis=="y":
       prior_y = predict(posterior_y,yOffset,kernel)  
-      posterior_y = update(likelihood_y, prior_y)
+      #posterior_y = update(likelihood_y, prior_y)
     #print 'post x:'
     #print posterior_x
     #print 'post y:'
