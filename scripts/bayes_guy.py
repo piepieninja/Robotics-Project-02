@@ -57,7 +57,7 @@ def obs_model(x, y, axis):
     #print 'likelihood_x:'
     #print likelihood_x
     g_i = 0;
-    for i in range(x-2,100):
+    for i in range(y-2,100):
         if g_i == 5:
             break
 	if i < 0:
